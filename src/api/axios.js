@@ -4,7 +4,7 @@ import axios from "axios";
   //baseURL: "http://localhost:5000/api", // DO NOT add `/routine` here
 //});
 const instance = axios.create({
-  baseURL: "https://beauty-bliss-server-production.up.railway.app/",
+  baseURL: "https://beauty-bliss-server-production.up.railway.app/api",
 });
 
 
