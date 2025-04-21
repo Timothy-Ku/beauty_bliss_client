@@ -6,7 +6,7 @@ export default function Weather({ onWeatherDataFetched }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const apiKey = "aabef8a61cfac039940730eae26885ed";
+  
 
   useEffect(() => {
     const fetchWeatherByCoords = async (lat, lon) => {
