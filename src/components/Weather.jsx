@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+// ✅ Define API key from env at the top level
+const apiKey = process.env.REACT_APP_OPENWEATHER_API_KEY;
+
 export default function Weather({ onWeatherDataFetched }) {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  
 
   useEffect(() => {
     const fetchWeatherByCoords = async (lat, lon) => {
@@ -55,18 +56,19 @@ export default function Weather({ onWeatherDataFetched }) {
     return "🌤️";
   };
 
-  if (loading) return null;
-  if (error || !weather) return null;
+  if (loading || error || !weather) return null;
 
   const icon = getWeatherIcon(weather.weather[0].description);
 
   return (
     <div className="w-full overflow-hidden">
-<div className="whitespace-nowrap animate-marquee text-sm text-gray-800 py-1">
+      <div className="whitespace-nowrap animate-marquee text-sm text-gray-800 py-1">
         <span className="mx-4">{icon}</span>
         <span className="mx-4">City: {weather.name}</span>
         <span className="mx-4">Temp: {weather.main.temp}°C</span>
-        <span className="mx-4 capitalize">Condition: {weather.weather[0].description}</span>
+        <span className="mx-4 capitalize">
+          Condition: {weather.weather[0].description}
+        </span>
         <span className="mx-4">{icon}</span>
       </div>
     </div>
