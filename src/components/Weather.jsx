@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// ✅ Define API key from env at the top level
-const apiKey = process.env.REACT_APP_OPENWEATHER_API_KEY;
-
 export default function Weather({ onWeatherDataFetched }) {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchWeatherByCoords = async (lat, lon) => {
+    const fetchWeatherFromBackend = async (lat, lon) => {
       try {
         const res = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`
+          `${process.env.REACT_APP_API_URL}/weather/by-coords?lat=${lat}&lon=${lon}`
         );
         setWeather(res.data);
         if (typeof onWeatherDataFetched === "function") {
@@ -31,7 +28,7 @@ export default function Weather({ onWeatherDataFetched }) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          fetchWeatherByCoords(latitude, longitude);
+          fetchWeatherFromBackend(latitude, longitude);
         },
         (err) => {
           console.error("Geolocation error:", err);

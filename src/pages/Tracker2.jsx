@@ -51,9 +51,7 @@ const renderRadio = (field, options, colorMapping, form, handleChange) => (
       {options.map((val) => (
         <label
           key={val}
-          className={`px-3 py-1 rounded-full cursor-pointer border font-medium transition ${
-            form[field] === val ? `${colorMapping[val]} text-white` : "bg-gray-100"
-          }`}
+          className={`px-3 py-1 rounded-full cursor-pointer border font-medium transition ${form[field] === val ? `${colorMapping[val]} text-white` : "bg-gray-100"}`}
         >
           <input
             type="radio"
@@ -208,13 +206,13 @@ export default function Tracker() {
       <ToastContainer />
       <h2 className="text-3xl font-bold text-center text-pink-600 mb-6">Beauty Tracker</h2>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center mb-6">
         <Weather location="" />
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Form Section */}
-        <div className="w-full md:w-1/2 bg-white p-6 rounded shadow">
+        <div className="bg-white p-6 rounded shadow space-y-4">
           {renderRadio("mood", Object.keys(colorMappings.mood), colorMappings.mood, form, handleChange)}
           {renderRadio("condition", Object.keys(colorMappings.condition), colorMappings.condition, form, handleChange)}
           {renderRadio("products", Object.keys(colorMappings.products), colorMappings.products, form, handleChange)}
@@ -253,11 +251,11 @@ export default function Tracker() {
 
         {/* Tracker Card */}
         {data.length > 0 && (
-          <div className="w-full md:w-1/2 bg-pink-50 p-6 rounded shadow flex flex-col justify-between">
+          <div className="bg-pink-50 p-6 rounded shadow flex flex-col justify-between space-y-4">
             <div>
               <h3 className="text-xl font-bold mb-2">
                 Tip {index + 1} —{" "}
-               <div></div> <span className="text-sm text-gray-600">
+                <span className="text-sm text-gray-600">
                   Date {new Date(current.createdAt).toLocaleDateString()}
                 </span>
               </h3>
@@ -281,7 +279,6 @@ export default function Tracker() {
                 <button onClick={() => setIndex((i) => Math.max(i - 1, 0))} disabled={index === 0} className="flex-1 bg-gray-300 py-2 rounded disabled:opacity-50">⬅️ Previous</button>
                 <button onClick={() => deleteEntry(current._id)} className="flex-1 bg-red-400 text-white py-2 rounded">🗑️ Delete</button>
                 <button onClick={() => setIndex((i) => Math.min(i + 1, data.length - 1))} disabled={index === data.length - 1} className="flex-1 bg-gray-300 py-2 rounded disabled:opacity-50">Next ➡️</button>
-                <button onClick={() => handleEdit(current)} className="flex-1 bg-yellow-400 text-white py-2 rounded">✏️ Edit</button>
               </div>
             </div>
           </div>
