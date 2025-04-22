@@ -6,44 +6,50 @@ import Weather from "../components/Weather";
 
 const colorMappings = {
   mood: {
-    Happy: "bg-pink-300",
-    Tired: "bg-gray-300",
-    Relaxed: "bg-teal-300",
-    Sad: "bg-blue-300",
-    Excited: "bg-yellow-300",
-    Anxious: "bg-orange-300",
+    Happy: "bg-yellow-400",
+    Tired: "bg-gray-400",
+    Relaxed: "bg-green-400",
+    Sad: "bg-blue-400",
+    Excited: "bg-red-400",
+    Anxious: "bg-orange-400",
   },
   condition: {
-    Dry: "bg-blue-200",
-    Oily: "bg-yellow-300",
-    Acne: "bg-red-300",
-    Normal: "bg-green-300",
+    Dry: "bg-blue-400",
+    Oily: "bg-yellow-500",
+    Acne: "bg-red-500",
+    Normal: "bg-green-400",
   },
   products: {
-    Cleanser: "bg-teal-200",
-    Serum: "bg-purple-200",
-    Moisturizer: "bg-pink-200",
-    Toner: "bg-indigo-200",
-    Sunscreen: "bg-orange-200",
+    Cleanser: "bg-teal-400",
+    Serum: "bg-purple-400",
+    Moisturizer: "bg-pink-400",
+    Toner: "bg-indigo-400",
+    Sunscreen: "bg-orange-300",
+    "Hydrating Serum": "bg-blue-300",
+    "Face Wash": "bg-lime-300",
+    "Exfoliating Scrub": "bg-rose-300",
+    "anti-aging cream": "bg-emerald-300",
+    "vitamin c serum": "bg-cyan-300",
+    "retinol cream": "bg-violet-300",
+    "eye cream": "bg-fuchsia-300",
+    "no products": "bg-gray-500",
     Other: "bg-gray-200",
   },
   timeUnit: {
-    days: "bg-gray-100",
-    weeks: "bg-green-100",
-    months: "bg-blue-100",
+    days: "bg-gray-300",
+    weeks: "bg-green-300",
+    months: "bg-blue-300",
   },
 };
 
-const renderRadio = (field, options, colorMapping, form, handleChange, label) => (
+const renderRadio = (field, options, colorMapping, form, handleChange) => (
   <div className="mb-4">
-    <label className="block font-semibold text-lg text-gray-700 mb-1">{label}</label>
+    <label className="block font-semibold capitalize mb-1 text-sm">{field}</label>
     <div className="flex gap-2 flex-wrap">
       {options.map((val) => (
         <label
           key={val}
-          className={`px-4 py-2 rounded-full cursor-pointer border font-medium transition ${
-            form[field] === val ? `${colorMapping[val]} text-white` : "bg-gray-200"
-          }`}
+          className={`px-3 py-1 rounded-full cursor-pointer border font-medium transition ${form[field] === val ? `${colorMapping[val]} text-white` : "bg-gray-100"}`}
         >
           <input
             type="radio"
@@ -186,112 +192,85 @@ export default function Tracker() {
 
   const current = data[index] || {};
 
-  
-  
-
   return (
-    <div className="p-6 max-w-6xl mx-auto flex justify-between items-start">
-        
+    <div className="p-6 max-w-full mx-auto">
       <ToastContainer />
-      {/* Left column: Input Form */}
-      <div className="w-full lg:w-3/4 my:20px p-6 bg-white rounded-3xl shadow-xl border border-pink-100">
-        <h3 className="text-2xl font-semibold mb-6 text-pink-500">Your Beauty Journey</h3>
-        
+      <h2 className="text-2xl font-bold text-center text-pink-600 mb-2">Beauty Tracker</h2>
+      <p className="text-center text-gray-600 mb-4"> Track Your Beauty Journey </p>
 
-        {renderRadio("mood", Object.keys(colorMappings.mood), colorMappings.mood, form, handleChange, "💖 What is your mood today?")}
-        {renderRadio("condition", Object.keys(colorMappings.condition), colorMappings.condition, form, handleChange, "🌸 What is your skin condition today?")}
-        {renderRadio("products", Object.keys(colorMappings.products), colorMappings.products, form, handleChange, "Products used")}
-
-        {form.products === "Other" && (
-          <div className="mb-4">
-            <label className="block font-semibold mb-1">Specify Product</label>
-            <input
-              type="text"
-              className="w-full border p-2 rounded-xl"
-              placeholder="Enter product details"
-              value={form.customProduct}
-              onChange={(e) => handleChange("customProduct", e.target.value)}
-            />
-          </div>
-        )}
-
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">How long have you used the product?</label>
-          <div className="flex items-center gap-2">
-            <button onClick={() => handleProgressChange("decrease")} className="bg-gray-200 p-2 rounded-full">-</button>
-            <span className="px-4">{form.progress}</span>
-            <button onClick={() => handleProgressChange("increase")} className="bg-gray-200 p-2 rounded-full">+</button>
-          </div>
-        </div>
-
-        {renderRadio("timeUnit", Object.keys(colorMappings.timeUnit), colorMappings.timeUnit, form, handleChange, "Duration")}
-
-        <button
-          onClick={updateTracker}
-          className="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-2xl"
-        >
-          {isEditing ? "Update Progress" : "Submit Progress"}
-        </button>
+      <div className="flex justify-center mb-6">
+        <Weather location="" />
       </div>
 
-      {/* Right column: Beauty Tips */}
-      <div className="w-full ml-6 lg:w-1/3 bg-pink-50 p-6 rounded-2xl shadow-xl border border-pink-100 flex flex-col justify-between">
-        <h3 className="text-xl font-bold mb-2">
-          Tip {index + 1} —{" "}
-          <span className="text-sm text-gray-600">
-            Date {new Date(current.createdAt).toLocaleDateString()}
-          </span>
-        </h3>
-        <p><strong>Mood:</strong> {current.mood}</p>
-        <p><strong>Skin Condition:</strong> {current.condition}</p>
-        <p><strong>Products Used:</strong> {current.products}</p>
-        <p><strong>Duration:</strong> {current.progress}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="lg:col-span-2 w-full bg-white p-4 md:p-6 rounded-xl shadow text-sm">
+          {renderRadio("mood", Object.keys(colorMappings.mood), colorMappings.mood, form, handleChange)}
+          {renderRadio("condition", Object.keys(colorMappings.condition), colorMappings.condition, form, handleChange)}
+          {renderRadio("products", Object.keys(colorMappings.products), colorMappings.products, form, handleChange)}
 
-        <div className="w-full bg-white mt-4 p-4 rounded-xl shadow overflow-y-auto max-h-[300px]">
-          <h3 className="text-xl font-semibold mb-2 text-pink-600">Personalized Beauty Tips</h3>
-          {current.beautyTips ? (
-            <p className="text-sm text-gray-700 whitespace-pre-line">{current.beautyTips}</p>
-          ) : (
-            <p className="text-sm text-gray-500">No tips available for this entry.</p>
+          {form.products === "Other" && (
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">Specify Product</label>
+              <input
+                type="text"
+                className="w-full border p-2 rounded"
+                placeholder="Enter product details"
+                value={form.customProduct}
+                onChange={(e) => handleChange("customProduct", e.target.value)}
+              />
+            </div>
           )}
+
+          <div className="mb-4">
+            <label className="block font-semibold mb-1">Progress</label>
+            <div className="flex items-center gap-2">
+              <button onClick={() => handleProgressChange("decrease")} className="bg-gray-300 p-2 rounded-full text-xs">-</button>
+              <span className="px-4">{form.progress}</span>
+              <button onClick={() => handleProgressChange("increase")} className="bg-gray-300 p-2 rounded-full text-xs">+</button>
+            </div>
+          </div>
+
+          {renderRadio("timeUnit", Object.keys(colorMappings.timeUnit), colorMappings.timeUnit, form, handleChange)}
+
+          <button
+            onClick={updateTracker}
+            className="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white py-2 rounded text-sm"
+          >
+            {isEditing ? "Update Progress" : "Submit Progress"}
+          </button>
         </div>
 
-        <div className="mt-4">
-            <Weather />
+        {data.length > 0 && (
+          <div className="lg:col-span-1 w-full bg-pink-50 p-4 md:p-6 rounded-xl shadow flex flex-col justify-between text-sm">
+            <div>
+              <h3 className="text-lg font-bold mb-2">
+                Tip {index + 1} — <span className="text-sm text-gray-600">Date {new Date(current.createdAt).toLocaleDateString()}</span>
+              </h3>
+              <p><strong>Mood:</strong> {current.mood}</p>
+              <p><strong>Skin Condition:</strong> {current.condition}</p>
+              <p><strong>Products Used:</strong> {current.products}</p>
+              <p><strong>Progress:</strong> {current.progress}</p>
             </div>
 
+            <div className="w-full bg-white mt-4 p-3 rounded shadow overflow-y-auto max-h-[300px]">
+              <h3 className="text-base font-semibold mb-2 text-pink-600">Personalized Beauty Tips</h3>
+              {current.beautyTips ? (
+                <p className="text-sm text-gray-700 whitespace-pre-line">{current.beautyTips}</p>
+              ) : (
+                <p className="text-sm text-gray-500">No tips available for this entry.</p>
+              )}
+            </div>
 
-        <div className="mt-6 space-y-2">
-          <div className="flex justify-between gap-2">
-          <button
-                onClick={() => setIndex((i) => Math.max(i - 1, 0))}
-                disabled={index === 0}
-                className="flex-1 bg-gray-200 py-1 px-4 rounded-xl disabled:opacity-50 text-xs"
-                >
-                <span className="text-sm">⬅️</span> Previous
-                </button>
-                <button
-                onClick={() => deleteEntry(current._id)}
-                className="flex-1 bg-red-400 text-white py-1 px-4 rounded-xl text-xs"
-                >
-                <span className="text-sm">🗑️</span> Delete
-                </button>
-                <button
-                onClick={() => setIndex((i) => Math.min(i + 1, data.length - 1))}
-                disabled={index === data.length - 1}
-                className="flex-1 bg-gray-200 py-1 px-4 rounded-xl disabled:opacity-50 text-xs"
-                >
-                Next <span className="text-sm">➡️</span>
-                </button>
-                <button
-                onClick={() => handleEdit(current)}
-                className="flex-1 bg-yellow-300 text-white py-1 px-4 rounded-xl text-xs"
-                >
-                <span className="text-sm">✏️</span> Edit
-                </button>
-  
+            <div className="mt-4 flex flex-col gap-2">
+              <div className="flex justify-between gap-2">
+                <button onClick={() => setIndex((i) => Math.max(i - 1, 0))} disabled={index === 0} className="flex-1 bg-gray-300 py-1 rounded disabled:opacity-50 text-xs">⬅️ Previous</button>
+                <button onClick={() => deleteEntry(current._id)} className="flex-1 bg-red-400 text-white py-1 rounded text-xs">🗑️ Delete</button>
+                <button onClick={() => setIndex((i) => Math.min(i + 1, data.length - 1))} disabled={index === data.length - 1} className="flex-1 bg-gray-300 py-1 rounded disabled:opacity-50 text-xs">Next ➡️</button>
+                <button onClick={() => handleEdit(current)} className="flex-1 bg-yellow-400 text-white py-1 rounded text-xs">✏️ Edit</button>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
