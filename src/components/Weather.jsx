@@ -1,28 +1,38 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../api/axios";
 
 export default function Weather({ onWeatherDataFetched }) {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchWeatherFromBackend = async (lat, lon) => {
-      try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/weather/by-coords?lat=${lat}&lon=${lon}`
-        );
-        setWeather(res.data);
-        if (typeof onWeatherDataFetched === "function") {
-          onWeatherDataFetched(res.data);
-        }
-        setLoading(false);
-      } catch (err) {
-        console.error("Failed to fetch weather:", err);
-        setError("Failed to fetch weather");
-        setLoading(false);
+  // Check API URL
+  const baseURL = process.env.REACT_APP_API_URL;
+  console.log("Base API URL:", baseURL); // Useful for debugging
+
+  const fetchWeatherFromBackend = async (lat, lon) => {
+    try {
+      const res = await axios.get(
+        `${baseURL}/weather/by-coords?lat=${lat}&lon=${lon}`
+      );
+      setWeather(res.data);
+      if (typeof onWeatherDataFetched === "function") {
+        onWeatherDataFetched(res.data);
       }
-    };
+      setLoading(false);
+    } catch (err) {
+      console.error("Failed to fetch weather:", err);
+      setError("Failed to fetch weather");
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!baseURL) {
+      setError("API base URL is not defined.");
+      setLoading(false);
+      return;
+    }
 
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -40,7 +50,7 @@ export default function Weather({ onWeatherDataFetched }) {
       setError("Geolocation not supported.");
       setLoading(false);
     }
-  }, [onWeatherDataFetched]);
+  }, [baseURL, onWeatherDataFetched]);
 
   const getWeatherIcon = (desc) => {
     if (!desc) return "❓";

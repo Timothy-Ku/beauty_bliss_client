@@ -3,6 +3,41 @@ import axios from "../api/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Weather from "../components/Weather";
+import { motion } from "framer-motion";
+
+const emojiMappings = {
+  mood: {
+    Happy: "😊",
+    Tired: "😴",
+    Relaxed: "😌",
+    Sad: "😢",
+    Excited: "🤩",
+    Anxious: "😰",
+  },
+  condition: {
+    Dry: "💧",
+    Oily: "🛢️",
+    Acne: "😬",
+    Normal: "👌",
+  },
+  products: {
+    Cleanser: "🧼",
+    Serum: "💧",
+    Moisturizer: "🧴",
+    Toner: "🧪",
+    Sunscreen: "🌞",
+    "Hydrating Serum": "🚿",
+    "Face Wash": "🫧",
+    "Exfoliating Scrub": "🧂",
+    "anti-aging cream": "🕰️",
+    "vitamin c serum": "🍊",
+    "retinol cream": "🧪",
+    "eye cream": "👁️",
+    "no products": "🚫",
+    Other: "➕",
+  },
+};
+
 
 const colorMappings = {
   mood: {
@@ -42,14 +77,16 @@ const colorMappings = {
   },
 };
 
-const renderRadio = (field, options, colorMapping, form, handleChange) => (
+const renderRadio = (field, options, colorMapping, form, handleChange, labelText) => (
   <div className="mb-4">
-    <label className="block font-semibold capitalize mb-1 text-sm">{field}</label>
+    <label className="block font-semibold mb-1 text-sm">{labelText || field}</label>
     <div className="flex gap-2 flex-wrap">
       {options.map((val) => (
         <label
           key={val}
-          className={`px-3 py-1 rounded-full cursor-pointer border font-medium transition ${form[field] === val ? `${colorMapping[val]} text-white` : "bg-gray-100"}`}
+          className={`px-3 py-1 rounded-full cursor-pointer border font-medium transition flex items-center gap-1 ${
+            form[field] === val ? `${colorMapping[val]} text-white` : "bg-gray-100"
+          }`}
         >
           <input
             type="radio"
@@ -58,12 +95,14 @@ const renderRadio = (field, options, colorMapping, form, handleChange) => (
             onChange={() => handleChange(field, val)}
             className="hidden"
           />
-          {val}
+          <span>{emojiMappings[field]?.[val]}</span>
+          <span>{val}</span>
         </label>
       ))}
     </div>
   </div>
 );
+
 
 export default function Tracker() {
   const [data, setData] = useState([]);
@@ -193,24 +232,24 @@ export default function Tracker() {
   const current = data[index] || {};
 
   return (
-    <div className="p-6 max-w-full mx-auto">
+    <div className="p-6 max-w-full mx-auto bg-gradient-to-br from-pink-50 via-rose-100 to-pink-200 min-h-screen">
       <ToastContainer />
-      <h2 className="text-2xl font-bold text-center text-pink-600 mb-2">Beauty Tracker</h2>
-      <p className="text-center text-gray-600 mb-4"> Track Your Beauty Journey </p>
+      <h2 className="text-2xl font-bold text-center text-pink-600 mb-2">💖 Beauty Tracker</h2>
+      <p className="text-center text-gray-600 mb-4">✨ Track Your Beauty Journey ✨</p>
 
       <div className="flex justify-center mb-6">
         <Weather location="" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        <div className="lg:col-span-2 w-full bg-white p-4 md:p-6 rounded-xl shadow text-sm">
+        <div className="lg:col-span-2 w-full p-4 md:p-6 rounded-xl shadow text-sm bg-white/30 backdrop-blur-lg border border-white/50">
           {renderRadio("mood", Object.keys(colorMappings.mood), colorMappings.mood, form, handleChange)}
           {renderRadio("condition", Object.keys(colorMappings.condition), colorMappings.condition, form, handleChange)}
           {renderRadio("products", Object.keys(colorMappings.products), colorMappings.products, form, handleChange)}
 
           {form.products === "Other" && (
             <div className="mb-4">
-              <label className="block font-semibold mb-1">Specify Product</label>
+              <label className="block font-semibold mb-1">📝 Specify Product</label>
               <input
                 type="text"
                 className="w-full border p-2 rounded"
@@ -222,11 +261,11 @@ export default function Tracker() {
           )}
 
           <div className="mb-4">
-            <label className="block font-semibold mb-1">Progress</label>
+            <label className="block font-semibold mb-1">📊 Progress</label>
             <div className="flex items-center gap-2">
-              <button onClick={() => handleProgressChange("decrease")} className="bg-gray-300 p-2 rounded-full text-xs">-</button>
+              <button onClick={() => handleProgressChange("decrease")} className="bg-gray-300 p-2 rounded-full text-xs">➖</button>
               <span className="px-4">{form.progress}</span>
-              <button onClick={() => handleProgressChange("increase")} className="bg-gray-300 p-2 rounded-full text-xs">+</button>
+              <button onClick={() => handleProgressChange("increase")} className="bg-gray-300 p-2 rounded-full text-xs">➕</button>
             </div>
           </div>
 
@@ -236,15 +275,15 @@ export default function Tracker() {
             onClick={updateTracker}
             className="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white py-2 rounded text-sm"
           >
-            {isEditing ? "Update Progress" : "Submit Progress"}
+            {isEditing ? "💾 Update Progress" : "✨ Submit Progress"}
           </button>
         </div>
 
         {data.length > 0 && (
-          <div className="lg:col-span-1 w-full bg-pink-50 p-4 md:p-6 rounded-xl shadow flex flex-col justify-between text-sm">
+          <div className="lg:col-span-1 w-full p-4 md:p-6 rounded-xl shadow flex flex-col justify-between text-sm bg-pink-100/30 backdrop-blur-lg border border-pink-200/50">
             <div>
               <h3 className="text-lg font-bold mb-2">
-                Tip {index + 1} — <span className="text-sm text-gray-600">Date {new Date(current.createdAt).toLocaleDateString()}</span>
+                Tip {index + 1} — <span className="text-sm text-gray-600">📅 {new Date(current.createdAt).toLocaleDateString()}</span>
               </h3>
               <p><strong>Mood:</strong> {current.mood}</p>
               <p><strong>Skin Condition:</strong> {current.condition}</p>
@@ -252,14 +291,28 @@ export default function Tracker() {
               <p><strong>Progress:</strong> {current.progress}</p>
             </div>
 
-            <div className="w-full bg-white mt-4 p-3 rounded shadow overflow-y-auto max-h-[300px]">
-              <h3 className="text-base font-semibold mb-2 text-pink-600">Personalized Beauty Tips</h3>
-              {current.beautyTips ? (
-                <p className="text-sm text-gray-700 whitespace-pre-line">{current.beautyTips}</p>
-              ) : (
-                <p className="text-sm text-gray-500">No tips available for this entry.</p>
-              )}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="relative p-6 bg-white/40 mt-6 backdrop-blur-lg border border-white/30 rounded-2xl shadow"
+            >
+            <div className="overflow-hidden">
+              <img
+                src="/beauty-avatar.png"
+                alt="Beautician"
+                className="float-right w-20 h-20 lg:w-24 lg:h-24 rounded-full border-4 border-pink-200 shadow-md ml-4 mb-2"
+              />
+              <p className="text-gray-800 text-sm italic whitespace-pre-line">
+                {current.beautyTips}
+              </p>
             </div>
+
+
+              <p className="text-gray-800 text-sm italic mt-4 whitespace-pre-line">
+                {current.beautyTips}
+              </p>
+            </motion.div>
 
             <div className="mt-4 flex flex-col gap-2">
               <div className="flex justify-between gap-2">
