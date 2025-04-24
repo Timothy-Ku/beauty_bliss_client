@@ -243,7 +243,7 @@ export default function Tracker() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 w-full p-4 md:p-6 rounded-xl shadow text-sm bg-white/30 backdrop-blur-lg border border-white/50">
-          {renderRadio("mood", Object.keys(colorMappings.mood), colorMappings.mood, form, handleChange)}
+          {renderRadio("mood", Object.keys(colorMappings.mood), colorMappings.mood, form, handleChange, "what's your mood Today?")}
           {renderRadio("condition", Object.keys(colorMappings.condition), colorMappings.condition, form, handleChange)}
           {renderRadio("products", Object.keys(colorMappings.products), colorMappings.products, form, handleChange)}
 
@@ -297,7 +297,7 @@ export default function Tracker() {
               transition={{ duration: 0.6, ease: "easeOut" }}
               className="relative p-6 bg-white/40 mt-6 backdrop-blur-lg border border-white/30 rounded-2xl shadow"
             >
-            <div className="overflow-hidden">
+            <div className="max-h-48 overflow-y-auto pr-2">
               <img
                 src="/beauty-avatar.png"
                 alt="Beautician"
@@ -309,9 +309,6 @@ export default function Tracker() {
             </div>
 
 
-              <p className="text-gray-800 text-sm italic mt-4 whitespace-pre-line">
-                {current.beautyTips}
-              </p>
             </motion.div>
 
             <div className="mt-4 flex flex-col gap-2">
