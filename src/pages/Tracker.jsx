@@ -60,13 +60,9 @@ const colorMappings = {
     Moisturizer: "bg-pink-400",
     Toner: "bg-indigo-400",
     Sunscreen: "bg-orange-300",
-    "Hydrating Serum": "bg-blue-300",
     "Face Wash": "bg-lime-300",
-    "Exfoliating Scrub": "bg-rose-300",
     "anti-aging cream": "bg-emerald-300",
     "vitamin c serum": "bg-cyan-300",
-    "retinol cream": "bg-violet-300",
-    "eye cream": "bg-fuchsia-300",
     "no products": "bg-gray-500",
     Other: "bg-gray-200",
   },
@@ -244,8 +240,8 @@ export default function Tracker() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 w-full p-4 md:p-6 rounded-xl shadow text-sm bg-white/30 backdrop-blur-lg border border-white/50">
           {renderRadio("mood", Object.keys(colorMappings.mood), colorMappings.mood, form, handleChange, "what's your mood Today?")}
-          {renderRadio("condition", Object.keys(colorMappings.condition), colorMappings.condition, form, handleChange)}
-          {renderRadio("products", Object.keys(colorMappings.products), colorMappings.products, form, handleChange)}
+          {renderRadio("condition", Object.keys(colorMappings.condition), colorMappings.condition, form, handleChange, "How's your skin condition?")}
+          {renderRadio("products", Object.keys(colorMappings.products), colorMappings.products, form, handleChange, "What products did you use?")}
 
           {form.products === "Other" && (
             <div className="mb-4">
@@ -261,7 +257,7 @@ export default function Tracker() {
           )}
 
           <div className="mb-4">
-            <label className="block font-semibold mb-1">📊 Progress</label>
+            <label className="block font-semibold mb-1">📊 How long have you used the product</label>
             <div className="flex items-center gap-2">
               <button onClick={() => handleProgressChange("decrease")} className="bg-gray-300 p-2 rounded-full text-xs">➖</button>
               <span className="px-4">{form.progress}</span>
