@@ -2,20 +2,26 @@ import { useState, useEffect } from "react";
 import axios from "../api/axios"; // Ensure this points to your custom axios instance
 
 export default function Home() {
-  const [routine, setRoutine] = useState([]);
+  const [routine, setRoutine] = useState([]); // Start with an empty array
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("/routine/testuser") // This makes a request to http://localhost:5000/api/routine/testuser
-      .then((res) => {
-        setRoutine(res.data.routine); // Assuming backend returns `{ routine: [...] }`
-        setLoading(false);
-      })
-      .catch((err) => {
+    const fetchRoutine = async () => {
+      try {
+        const res = await axios.get("/routine/testuser");
+        console.log("API response:", res.data);
+
+        const fetchedRoutine = Array.isArray(res.data.routine) ? res.data.routine : [];
+        setRoutine(fetchedRoutine);
+      } catch (err) {
         console.error("❌ API Error:", err);
+        setRoutine([]); // fallback if error
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchRoutine();
   }, []);
 
   return (
@@ -26,10 +32,10 @@ export default function Home() {
       <p className="text-gray-600 text-lg max-w-xl mb-8">
         Try on looks virtually, build your personalized skincare routine, and track your beauty progress – all in one place.
       </p>
-      
+
       {loading ? (
         <p className="text-gray-500">Loading your routine...</p>
-      ) : (
+      ) : routine.length > 0 ? (
         <>
           <p className="text-lg mb-4">Your Suggested Routine:</p>
           <ul className="text-gray-600">
@@ -38,9 +44,11 @@ export default function Home() {
             ))}
           </ul>
         </>
+      ) : (
+        <p className="text-gray-500">No routine available.</p>
       )}
-      
-      <div className="flex gap-4">
+
+      <div className="flex gap-4 mt-8">
         <a
           href="/tryon"
           className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow"
